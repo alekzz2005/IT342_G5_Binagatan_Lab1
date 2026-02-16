@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "com.it342.miniapp"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.it342.miniapp"
