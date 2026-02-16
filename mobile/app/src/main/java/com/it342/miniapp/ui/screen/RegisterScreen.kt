@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.it342.miniapp.ui.viewmodel.RegisterViewModel
+import com.it342.miniapp.utils.DebugHelper
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -26,6 +27,14 @@ fun RegisterScreen(
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
+    
+    // Debug: Auto-fill developer credentials
+    val fillDevCredentials = {
+        username = DebugHelper.DEV_USERNAME
+        email = DebugHelper.DEV_EMAIL
+        password = DebugHelper.DEV_PASSWORD
+        confirmPassword = DebugHelper.DEV_PASSWORD
+    }
     
     val registerState by viewModel.registerState.collectAsState()
     val errorMessage by viewModel.errorMessage.collectAsState()
@@ -161,6 +170,17 @@ fun RegisterScreen(
                             text = if (isLoading) "Creating..." else "Register",
                             modifier = Modifier.padding(8.dp)
                         )
+                    }
+                    
+                    Spacer(modifier = Modifier.height(8.dp))
+                    
+                    // Debug button to auto-fill developer credentials
+                    OutlinedButton(
+                        onClick = fillDevCredentials,
+                        modifier = Modifier.fillMaxWidth(),
+                        enabled = !isLoading
+                    ) {
+                        Text("🔧 Fill Dev Credentials")
                     }
                     
                     Spacer(modifier = Modifier.height(16.dp))

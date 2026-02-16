@@ -51,7 +51,20 @@ class RegisterViewModel(application: Application) : AndroidViewModel(application
                         _errorMessage.value = authResponse?.message ?: "Registration failed."
                     }
                 } else {
-                    _errorMessage.value = "Registration failed. Please try again."
+                    // Try to get error message from response body
+                    val errorBody = response.errorBody()?.string()
+                    _errorMessage.value = if (errorBody != null && errorBody.contains("message")) {
+                        try {
+                            // Try to parse the error message from JSON
+                            val messageStart = errorBody.indexOf("\"message\":\"") + 11
+                            val messageEnd = errorBody.indexOf("\"", messageStart)
+                            errorBody.substring(messageStart, messageEnd)
+                        } catch (e: Exception) {
+                            "Registration failed: ${response.code()} - ${response.message()}"
+                        }
+                    } else {
+                        "Registration failed: ${response.code()} - ${response.message()}"
+                    }
                 }
             } catch (e: Exception) {
                 _errorMessage.value = e.message ?: "Registration failed. Please check your connection."

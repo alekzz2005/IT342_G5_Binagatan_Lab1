@@ -11,8 +11,9 @@ object RetrofitClient {
     
     // Change this to your backend URL
     // For Android Emulator: http://10.0.2.2:8080
-    // For Physical Device: http://YOUR_COMPUTER_IP:8080
-    private const val BASE_URL = "http://192.168.43.102:8080"
+    // For Physical Device with USB (ADB reverse): http://localhost:8080
+    // For Physical Device with WiFi: http://YOUR_COMPUTER_IP:8080
+    private const val BASE_URL = "http://localhost:8080"
     
     private var authToken: String? = null
     
