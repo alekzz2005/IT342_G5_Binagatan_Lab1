@@ -43,7 +43,20 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
                         _errorMessage.value = authResponse?.message ?: "Login failed."
                     }
                 } else {
-                    _errorMessage.value = "Invalid email or password."
+                    // Try to get error message from response body
+                    val errorBody = response.errorBody()?.string()
+                    _errorMessage.value = if (errorBody != null && errorBody.contains("message")) {
+                        try {
+                            // Try to parse the error message from JSON
+                            val messageStart = errorBody.indexOf("\"message\":\"") + 11
+                            val messageEnd = errorBody.indexOf("\"", messageStart)
+                            errorBody.substring(messageStart, messageEnd)
+                        } catch (e: Exception) {
+                            "Login failed: ${response.code()} - ${response.message()}"
+                        }
+                    } else {
+                        "Login failed: ${response.code()} - ${response.message()}"
+                    }
                 }
             } catch (e: Exception) {
                 _errorMessage.value = e.message ?: "Login failed. Please check your connection."
